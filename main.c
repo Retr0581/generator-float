@@ -56,19 +56,19 @@ double generate_number(double a, double b, int p) {
 
 void generate_variant(int variant, int k, int bits, double a, double b, int p) {
     char filename1[100], filename2[100];
-    sprintf(filename1, "Задания/variant_%d.md", variant);
-    sprintf(filename2, "Проверка/variant_%d.md", variant);
+    sprintf(filename1, "Р—Р°РґР°РЅРёСЏ/variant_%d.md", variant);
+    sprintf(filename2, "РџСЂРѕРІРµСЂРєР°/variant_%d.md", variant);
     
     FILE *f_task = fopen(filename1, "w");
     FILE *f_check = fopen(filename2, "w");
     
     if (!f_task || !f_check) {
-        printf("Ошибка создания файла!");
+        printf("РћС€РёР±РєР° СЃРѕР·РґР°РЅРёСЏ С„Р°Р№Р»Р°!");
         return;
     }
     
-    fprintf(f_task, "№ п/п | Вещественное число\n");
-    fprintf(f_check, "№ п/п | Вещественное число | Машинное представление | Точность\n");
+    fprintf(f_task, "в„– Рї/Рї | Р’РµС‰РµСЃС‚РІРµРЅРЅРѕРµ С‡РёСЃР»Рѕ\n");
+    fprintf(f_check, "в„– Рї/Рї | Р’РµС‰РµСЃС‚РІРµРЅРЅРѕРµ С‡РёСЃР»Рѕ | РњР°С€РёРЅРЅРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ | РўРѕС‡РЅРѕСЃС‚СЊ\n");
     
     for (int i = 1; i <= k; i++) {
         double original = generate_number(a, b, p);
@@ -92,7 +92,7 @@ int main() {
     
     FILE *config = fopen("config.txt", "r");
     if (!config) {
-        printf("Ошибка: файл config.txt не найден!\n");
+        printf("РћС€РёР±РєР°: С„Р°Р№Р» config.txt РЅРµ РЅР°Р№РґРµРЅ!\n");
         return 1;
     }
     
@@ -110,15 +110,15 @@ int main() {
     
     fclose(config);
     
-    printf("ГЕНЕРАТОР ИНДИВИДУАЛЬНЫХ ЗАДАНИЙ\n");
-    printf("Вариантов: %d\n", n);
-    printf("Заданий: %d\n", k);
-    printf("Разрядность: %d бит\n", bits);
-    printf("Диапазон: [%.2f, %.2f]\n", a, b);
-    printf("Знаков после запятой: %d\n", p);
+    printf("Р“Р•РќР•Р РђРўРћР  РРќР”РР’РР”РЈРђР›Р¬РќР«РҐ Р—РђР”РђРќРР™\n");
+    printf("Р’Р°СЂРёР°РЅС‚РѕРІ: %d\n", n);
+    printf("Р—Р°РґР°РЅРёР№: %d\n", k);
+    printf("Р Р°Р·СЂСЏРґРЅРѕСЃС‚СЊ: %d Р±РёС‚\n", bits);
+    printf("Р”РёР°РїР°Р·РѕРЅ: [%.2f, %.2f]\n", a, b);
+    printf("Р—РЅР°РєРѕРІ РїРѕСЃР»Рµ Р·Р°РїСЏС‚РѕР№: %d\n", p);
     
-    mkdir("Задания");
-    mkdir("Проверка");
+    mkdir("Р—Р°РґР°РЅРёСЏ");
+    mkdir("РџСЂРѕРІРµСЂРєР°");
     
     for (int variant = 1; variant <= n; variant++) {
         generate_variant(variant, k, bits, a, b, p);
