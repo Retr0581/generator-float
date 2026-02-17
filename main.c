@@ -77,19 +77,19 @@ long double generate_number(long double a, long double b, int p) {
 
 void generate_variant(int variant, int k, int bits, long double a, long double b, int p) {
     char filename1[100], filename2[100];
-    sprintf(filename1, "�������/�������_%d.md", variant);
-    sprintf(filename2, "��������/�������_%d.md", variant);
+    sprintf(filename1, "Задания/вариант_%d.md", variant);
+    sprintf(filename2, "Проверка/вариант_%d.md", variant);
     
     FILE *f_task = fopen(filename1, "w");
     FILE *f_check = fopen(filename2, "w");
     
     if (!f_task || !f_check) {
-        printf("������ �������� �����!");
+        printf("Ошибка создания файла!");
         return;
     }
     
-    fprintf(f_task, "� �/� | ������������ �����\n");
-    fprintf(f_check, "� �/� | ������������ ����� | �������� ������������� | ��������\n");
+    fprintf(f_task, "№ п/п | Вещественное число\n");
+    fprintf(f_check, "№ п/п | Вещественное число | Машинное представление | Точность\n");
     
     for (int i = 1; i <= k; i++) {
         long double original = generate_number(a, b, p);
@@ -113,7 +113,7 @@ int main() {
     
     FILE *config = fopen("config.txt", "r");
     if (!config) {
-        printf("������: ���� config.txt �� ������!\n");
+        printf("Ошибка: файл config.txt не найден!\n");
         return 1;
     }
     
@@ -129,15 +129,15 @@ int main() {
     
     fclose(config);
     
-    printf("��������� �������������� �������\n");
-    printf("���������: %d\n", n);
-    printf("�������: %d\n", k);
-    printf("�����������: %d ���\n", bits);
-    printf("��������: [%.2Lf, %.2Lf]\n", a, b);
-    printf("������ ����� �������: %d\n", p);
+    printf("ГЕНЕРАТОР ИНДИВИДУАЛЬНЫХ ЗАДАНИЙ\n");
+    printf("Вариантов: %d\n", n);
+    printf("Заданий: %d\n", k);
+    printf("Разрядность: %d бит\n", bits);
+    printf("Диапазон: [%.2Lf, %.2Lf]\n", a, b);
+    printf("Знаков после запятой: %d\n", p);
     
-    mkdir("�������");
-    mkdir("��������");
+    mkdir("Задания");
+    mkdir("Проверка");
     
     for (int variant = 1; variant <= n; variant++) {
         generate_variant(variant, k, bits, a, b, p);
