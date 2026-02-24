@@ -5,7 +5,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <time.h>
-#include <sys/stat.h>
+#include <direct.h>
 
 void num_to_binary(long double num, char *mas, int bits) {
     if (bits == 32) {
@@ -13,7 +13,9 @@ void num_to_binary(long double num, char *mas, int bits) {
         uint32_t raw;
         memcpy(&raw, &temp, sizeof(float));
         for (int i = bits - 1; i >= 0; i--) {
-            mas[(bits - 1) - i] = ((raw >> i) & 1) + '0';
+            uint32_t value = raw;
+            for (int j = 0; j < i; j++) value /= 2;
+            mas[(bits - 1) - i] = (value & 1) + '0';
         }
     }
     else if (bits == 64) {
@@ -21,18 +23,23 @@ void num_to_binary(long double num, char *mas, int bits) {
         uint64_t raw;
         memcpy(&raw, &temp, sizeof(double));
         for (int i = bits - 1; i >= 0; i--) {
-            mas[(bits - 1) - i] = ((raw >> i) & 1) + '0';
+            uint64_t value = raw;
+            for (int j = 0; j < i; j++) value /= 2;
+            mas[(bits - 1) - i] = (value & 1) + '0';
         }
     }
     else if (bits == 128){
         uint8_t raw[16];
         memcpy(raw, &num, sizeof(long double));
         int pos = 0;
-        for (int byte = 15; byte >= 0; byte--)
-            for (int bit = 7; bit >= 0; bit--)
-                mas[pos++] = ((raw[byte] >> bit) & 1) + '0';
+        for (int byte = 15; byte >= 0; byte--){
+            for (int bit = 7; bit >= 0; bit--){
+                unsigned char value = raw[byte];
+                for (int j = 0; j < bit; j++) value /= 2;
+                mas[pos++] = (value & 1) + '0';
+            }
+        }
     }
-
     mas[bits] = '\0';
 }
 
@@ -40,30 +47,33 @@ long double binary_to_num(const char *mas, int bits) {
     if (bits == 32) {
         uint32_t raw = 0;
         for (int i = 0; i < bits; i++) {
-            raw = (raw << 1) | (mas[i] - '0');
+            raw = raw * 2 + (mas[i] - '0');
         }
         float result;
         memcpy(&result, &raw, sizeof(float));
-        return (long double)result;
+        return result;
     }
     else if (bits == 64) {
         uint64_t raw = 0;
         for (int i = 0; i < bits; i++) {
-            raw = (raw << 1) | (mas[i] - '0');
+            raw = raw * 2 + (mas[i] - '0');
         }
         double result;
         memcpy(&result, &raw, sizeof(double));
-        return (long double)result;
+        return result;
     }
     else if (bits == 128){
         uint8_t raw[16] = {0};
         int pos = 0;
-        for (int byte = 15; byte >= 0; byte--)
-            for (int bit = 7; bit >= 0; bit--)
-                raw[byte] |= (mas[pos++] - '0') << bit;
+        for (int byte = 15; byte >= 0; byte--){
+            for (int bit = 7; bit >= 0; bit--){
+                unsigned char mask = 1;
+                for (int j = 0; j < bit; j++) mask *= 2;
+                if (mas[pos++] - '0') raw[byte] |= mask;
+            }
+        }
         long double result;
         memcpy(&result, raw, sizeof(long double));
-
         return result;
     }
     return 0.0L;
@@ -136,8 +146,8 @@ int main() {
     printf("Диапазон: [%.2Lf, %.2Lf]\n", a, b);
     printf("Знаков после запятой: %d\n", p);
     
-    mkdir("Задания");
-    mkdir("Проверка");
+    _mkdir("Задания");
+    _mkdir("Проверка");
     
     for (int variant = 1; variant <= n; variant++) {
         generate_variant(variant, k, bits, a, b, p);
